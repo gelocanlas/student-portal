@@ -148,6 +148,7 @@
     .btn-mode { background: var(--border); color: var(--text-dark); white-space: nowrap; }
     .btn-back { background: var(--border); color: var(--text-dark); margin-bottom: 20px; font-size: 0.9rem; }
 
+    /* ENHANCEMENT: Clickable User Avatar CSS */
     .user-pill {
       width: 32px; 
       height: 32px; 
@@ -159,6 +160,12 @@
       justify-content: center; 
       font-weight: bold;
       flex-shrink: 0;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s;
+    }
+    .user-pill:hover {
+      transform: scale(1.1);
     }
 
     /* --- ASSIGNMENT PAGE --- */
@@ -181,6 +188,31 @@
       box-sizing: border-box;
     }
 
+    /* ENHANCEMENT: Account Info Layout */
+    .account-info-card {
+      background: var(--bg-white);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 15px;
+    }
+    .account-big-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
     [hidden] { display: none !important; }
   </style>
 </head>
@@ -197,7 +229,7 @@
 
       <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-mode" onclick="toggleTheme()" id="themeBtn">🌙 Mode</button>
-        <div class="user-pill">TY</div>
+        <button class="user-pill" onclick="openAccount()" title="View Account Info">TY</button>
       </div>
     </header>
 
@@ -290,6 +322,27 @@
     </main>
   </div>
 
+  <div id="accountPage" hidden>
+    <main class="container">
+      <button class="btn btn-back" onclick="showOverview()">← Back to Overview</button>
+      <h1 style="font-size: 1.5rem;">Student Profile</h1>
+      
+      <div class="account-info-card">
+        <div class="account-big-avatar">TY</div>
+        <div style="width: 100%;">
+          <h2 style="margin: 0;">Tim Young</h2>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">Student ID: 2024-8842</p>
+          <hr style="border: none; border-top: 1px solid var(--border);">
+          <div style="text-align: left; padding: 10px;">
+            <p><strong>Course:</strong> Bachelor of Science in Computer Science</p>
+            <p><strong>Year Level:</strong> 2nd Year (Sophomore)</p>
+            <p><strong>Status:</strong> Enrolled (Full-Time)</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
   <script>
     function toggleTheme() {
       const isDark = document.body.getAttribute('data-theme') === 'dark';
@@ -310,16 +363,29 @@
       document.getElementById('counter').innerText = `${count} Subject${count !== 1 ? 's' : ''}`;
     });
 
-    function openSubject(name) {
+    // NAVIGATION LOGIC
+    function hideAll() {
       document.getElementById('overviewPage').hidden = true;
+      document.getElementById('detailsPage').hidden = true;
+      document.getElementById('accountPage').hidden = true;
+    }
+
+    function openSubject(name) {
+      hideAll();
       document.getElementById('detailsPage').hidden = false;
       document.getElementById('detailTitle').innerText = name + " Assignments";
       window.scrollTo(0,0);
     }
 
+    function openAccount() {
+      hideAll();
+      document.getElementById('accountPage').hidden = false;
+      window.scrollTo(0,0);
+    }
+
     function showOverview() {
+      hideAll();
       document.getElementById('overviewPage').hidden = false;
-      document.getElementById('detailsPage').hidden = true;
     }
   </script>
 </body>
