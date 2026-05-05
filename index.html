@@ -27,66 +27,159 @@
       --shadow: rgba(0,0,0,0.3);
     }
 
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-page); margin: 0; color: var(--text-dark); transition: background 0.3s; }
+    body { 
+      font-family: 'Segoe UI', system-ui, sans-serif; 
+      background: var(--bg-page); 
+      margin: 0; 
+      color: var(--text-dark); 
+      transition: background 0.3s; 
+    }
 
-    /* --- NAVIGATION --- */
+    /* --- RESPONSIVE NAVIGATION --- */
     .navbar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.8rem 2rem; background: var(--bg-white);
-      box-shadow: 0 2px 4px var(--shadow); position: sticky; top: 0; z-index: 100;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      padding: 0.8rem 1.5rem; 
+      background: var(--bg-white);
+      box-shadow: 0 2px 4px var(--shadow); 
+      position: sticky; 
+      top: 0; 
+      z-index: 100;
+      flex-wrap: wrap; /* Allows wrapping on small screens */
       gap: 10px;
     }
 
-    .search-wrapper { position: relative; flex: 0 1 400px; }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-    .top-search { 
-      width: 100%; padding: 8px 12px 8px 35px; border-radius: 20px; 
-      border: 1px solid var(--border); background: var(--bg-page); color: var(--text-dark); outline: none;
+    .search-wrapper { 
+      position: relative; 
+      flex: 1 1 300px; /* Grows but stays manageable */
+      max-width: 400px;
     }
 
-    /* --- LAYOUT --- */
-    .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    /* Adjusts search for mobile landscape/portrait overlap */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 0.8rem 1rem;
+      }
+      .search-wrapper {
+        order: 3; /* Moves search below logo/buttons on mobile */
+        flex: 1 0 100%; /* Forces full width */
+        margin-top: 5px;
+      }
+    }
+
+    .search-icon { 
+      position: absolute; 
+      left: 12px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      color: var(--text-muted); 
+      pointer-events: none; 
+    }
+
+    .top-search { 
+      width: 100%; 
+      padding: 8px 12px 8px 35px; 
+      border-radius: 20px; 
+      border: 1px solid var(--border); 
+      background: var(--bg-page); 
+      color: var(--text-dark); 
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    /* --- LAYOUT & GRID --- */
+    .container { 
+      max-width: 1200px; 
+      margin: 1.5rem auto; 
+      padding: 0 15px; 
+    }
+
+    .cards-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+      gap: 20px; 
+    }
+
+    /* Single column for narrow mobile phones */
+    @media (max-width: 480px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
     /* --- SUBJECT CARD --- */
     .subject-card {
-      background: var(--bg-white); border-radius: 12px; padding: 20px;
-      border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;
+      background: var(--bg-white); 
+      border-radius: 12px; 
+      padding: 20px;
+      border: 1px solid var(--border); 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px;
+      box-shadow: 0 2px 5px var(--shadow);
     }
-    .subject-title { font-size: 1.1rem; font-weight: 700; margin: 0; }
-    .subject-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; min-height: 50px; }
 
-    .stat-row { display: flex; gap: 15px; font-size: 0.8rem; font-weight: 600; padding: 10px 0; border-top: 1px solid var(--border); }
+    .subject-title { font-size: 1.1rem; font-weight: 700; margin: 0; }
+    .subject-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; min-height: 45px; }
+
+    .stat-row { 
+      display: flex; 
+      gap: 15px; 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      padding: 10px 0; 
+      border-top: 1px solid var(--border); 
+    }
     .stat-s { color: var(--submitted); }
     .stat-p { color: var(--pending); }
 
     /* --- BUTTONS --- */
-    .btn { cursor: pointer; border: none; border-radius: 6px; padding: 8px 12px; font-weight: 600; font-size: 0.75rem; transition: 0.2s; }
+    .btn { 
+      cursor: pointer; 
+      border: none; 
+      border-radius: 6px; 
+      padding: 8px 12px; 
+      font-weight: 600; 
+      font-size: 0.75rem; 
+      transition: 0.2s; 
+    }
     .btn-primary { background: var(--primary); color: white; align-self: flex-start; }
     .btn-mode { background: var(--border); color: var(--text-dark); white-space: nowrap; }
     .btn-back { background: var(--border); color: var(--text-dark); margin-bottom: 20px; font-size: 0.9rem; }
 
-    /* --- MOBILE RESPONSIVENESS --- */
-    @media (max-width: 600px) {
-      .navbar {
-        flex-direction: column; /* Stack logo, search, and mode button */
-        padding: 1rem;
-        height: auto;
-      }
-      .search-wrapper {
-        width: 100%;
-        order: 3; /* Move search bar below logo and buttons */
-        margin: 10px 0 0 0;
-      }
-      .navbar > div:first-child { width: 100%; text-align: center; }
-      .cards-grid {
-        grid-template-columns: 1fr; /* One card per row on mobile */
-      }
+    .user-pill {
+      width: 32px; 
+      height: 32px; 
+      background: var(--primary); 
+      border-radius: 50%; 
+      color: white; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: bold;
+      flex-shrink: 0;
     }
 
     /* --- ASSIGNMENT PAGE --- */
-    .assignment-item { background: var(--bg-white); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border); }
-    .remarks-box { width: 100%; margin-top: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-page); color: var(--text-dark); font-family: inherit; }
+    .assignment-item { 
+      background: var(--bg-white); 
+      padding: 15px; 
+      border-radius: 8px; 
+      margin-bottom: 10px; 
+      border: 1px solid var(--border); 
+    }
+    .remarks-box { 
+      width: 100%; 
+      margin-top: 10px; 
+      padding: 10px; 
+      border: 1px solid var(--border); 
+      border-radius: 6px; 
+      background: var(--bg-page); 
+      color: var(--text-dark); 
+      font-family: inherit;
+      box-sizing: border-box;
+    }
 
     [hidden] { display: none !important; }
   </style>
@@ -96,26 +189,28 @@
   <div id="overviewPage">
     <header class="navbar">
       <div style="font-weight: bold; color: var(--primary);">🎓 Education</div>
+      
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
         <input type="text" id="globalSearch" class="top-search" placeholder="Search subjects...">
       </div>
-      <div style="display: flex; align-items: center; gap: 15px;">
+
+      <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-mode" onclick="toggleTheme()" id="themeBtn">🌙 Mode</button>
-        <div style="width:30px; height:30px; background:var(--primary); border-radius:50%; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">TY</div>
+        <div class="user-pill">TY</div>
       </div>
     </header>
 
     <main class="container">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h1>Overview</h1>
-        <span id="counter" style="background:var(--primary); color:white; padding:2px 10px; border-radius:12px; font-size:0.8rem;">6 Subjects</span>
+        <h1 style="font-size: 1.5rem; margin: 0;">Overview</h1>
+        <span id="counter" style="background:var(--primary); color:white; padding:4px 12px; border-radius:15px; font-size:0.75rem; font-weight: 600;">6 Subjects</span>
       </div>
 
       <div class="cards-grid" id="grid">
-        <article class="subject-card" data-name="Biology">
+        <article class="subject-card">
           <h3 class="subject-title">Biology</h3>
-          <div class="subject-desc" contenteditable="true">An exploration of living organisms, from cellular structures to complex ecosystems and genetics.</div>
+          <div class="subject-desc">An exploration of living organisms, from cellular structures to complex ecosystems and genetics.</div>
           <div class="stat-row">
             <span class="stat-s">✓ 8 Submitted</span>
             <span class="stat-p">! 2 Pending</span>
@@ -123,9 +218,9 @@
           <button class="btn btn-primary" onclick="openSubject('Biology')">View Assignments</button>
         </article>
 
-        <article class="subject-card" data-name="Reading">
+        <article class="subject-card">
           <h3 class="subject-title">Reading</h3>
-          <div class="subject-desc" contenteditable="true">Developing critical literacy skills through the analysis of diverse texts and comprehension.</div>
+          <div class="subject-desc">Developing critical literacy skills through the analysis of diverse texts and comprehension.</div>
           <div class="stat-row">
             <span class="stat-s">✓ 12 Submitted</span>
             <span class="stat-p">! 0 Pending</span>
@@ -133,9 +228,9 @@
           <button class="btn btn-primary" onclick="openSubject('Reading')">View Assignments</button>
         </article>
 
-        <article class="subject-card" data-name="Physical Education">
+        <article class="subject-card">
           <h3 class="subject-title">Physical Education</h3>
-          <div class="subject-desc" contenteditable="true">Improving physical fitness, motor skills, and teamwork through structured sports activities.</div>
+          <div class="subject-desc">Improving physical fitness and teamwork through structured sports activities.</div>
           <div class="stat-row">
             <span class="stat-s">✓ 5 Submitted</span>
             <span class="stat-p">! 1 Pending</span>
@@ -143,9 +238,9 @@
           <button class="btn btn-primary" onclick="openSubject('Physical Education')">View Assignments</button>
         </article>
 
-        <article class="subject-card" data-name="Algebra">
+        <article class="subject-card">
           <h3 class="subject-title">Algebra(H), 121</h3>
-          <div class="subject-desc" contenteditable="true">Advanced algebraic concepts including quadratic equations, functions, and complex problem-solving.</div>
+          <div class="subject-desc">Advanced algebraic concepts including quadratic equations and functions.</div>
           <div class="stat-row">
             <span class="stat-s">✓ 15 Submitted</span>
             <span class="stat-p">! 4 Pending</span>
@@ -153,9 +248,9 @@
           <button class="btn btn-primary" onclick="openSubject('Algebra(H), 121')">View Assignments</button>
         </article>
 
-        <article class="subject-card" data-name="Chemistry">
+        <article class="subject-card">
           <h3 class="subject-title">Chemistry and Biochemistry</h3>
-          <div class="subject-desc" contenteditable="true">The study of matter, chemical reactions, and the molecular basis of biological processes.</div>
+          <div class="subject-desc">The study of matter, chemical reactions, and biological processes.</div>
           <div class="stat-row">
             <span class="stat-s">✓ 7 Submitted</span>
             <span class="stat-p">! 3 Pending</span>
@@ -163,9 +258,9 @@
           <button class="btn btn-primary" onclick="openSubject('Chemistry and Biochemistry')">View Assignments</button>
         </article>
 
-        <article class="subject-card" data-name="Computer Science">
+        <article class="subject-card">
           <h3 class="subject-title">Computer Science</h3>
-          <div class="subject-desc" contenteditable="true">Introduction to computational thinking, logic, and software development.</div>
+          <div class="subject-desc">Introduction to computational thinking, logic, and software development.</div>
           <div class="stat-row">
             <span class="stat-s">✓ 10 Submitted</span>
             <span class="stat-p">! 1 Pending</span>
@@ -187,36 +282,34 @@
           <span style="color:var(--pending)">Status: Pending</span>
         </div>
         <p style="font-size:0.85rem; margin-top:10px; color:var(--text-muted);">
-          Note: If you have already submitted this but the portal is not updated, please leave a remark below for the administrator.
+          Note: Leave a remark below if you handed in a hard copy.
         </p>
-        <textarea class="remarks-box" placeholder="Write your remarks here... (e.g. 'Handed in hard copy on Monday')"></textarea>
-        <button class="btn btn-primary" style="margin-top:10px" onclick="alert('Remark submitted to Administrator.')">Submit Remark</button>
+        <textarea class="remarks-box" placeholder="Write your remarks here..."></textarea>
+        <button class="btn btn-primary" style="margin-top:10px" onclick="alert('Remark submitted.')">Submit Remark</button>
       </div>
     </main>
   </div>
 
   <script>
-    // THEME TOGGLE
     function toggleTheme() {
       const isDark = document.body.getAttribute('data-theme') === 'dark';
       document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
       document.getElementById('themeBtn').innerText = isDark ? '🌙 Mode' : '☀️ Mode';
     }
 
-    // SEARCH LOGIC
     const search = document.getElementById('globalSearch');
     search.addEventListener('input', (e) => {
       const val = e.target.value.toLowerCase();
       let count = 0;
       document.querySelectorAll('.subject-card').forEach(card => {
-        const matches = card.querySelector('.subject-title').innerText.toLowerCase().includes(val);
-        card.hidden = !matches;
+        const title = card.querySelector('.subject-title').innerText.toLowerCase();
+        const matches = title.includes(val);
+        card.style.display = matches ? 'flex' : 'none';
         if(matches) count++;
       });
       document.getElementById('counter').innerText = `${count} Subject${count !== 1 ? 's' : ''}`;
     });
 
-    // NAVIGATION LOGIC
     function openSubject(name) {
       document.getElementById('overviewPage').hidden = true;
       document.getElementById('detailsPage').hidden = false;
