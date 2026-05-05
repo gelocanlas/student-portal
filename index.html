@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal - Complete System</title>
+  <style>
+    /* --- DESIGN TOKENS --- */
+    :root {
+      --primary: #1a8cff;
+      --bg-page: #f0f2f5;
+      --bg-white: #ffffff;
+      --text-dark: #1a1d23;
+      --text-muted: #666;
+      --border: #e0e4ea;
+      --shadow: rgba(0,0,0,0.05);
+      --submitted: #27ae60;
+      --pending: #f39c12;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #121212;
+      --bg-white: #1e1e1e;
+      --text-dark: #e0e0e0;
+      --text-muted: #b0b0b0;
+      --border: #333;
+      --shadow: rgba(0,0,0,0.3);
+    }
+
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-page); margin: 0; color: var(--text-dark); transition: background 0.3s; }
+
+    /* --- NAVIGATION --- */
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.8rem 2rem; background: var(--bg-white);
+      box-shadow: 0 2px 4px var(--shadow); position: sticky; top: 0; z-index: 100;
+    }
+
+    .search-wrapper { position: relative; flex: 0 1 400px; margin: 0 20px; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+    .top-search { 
+      width: 100%; padding: 8px 12px 8px 35px; border-radius: 20px; 
+      border: 1px solid var(--border); background: var(--bg-page); color: var(--text-dark); outline: none;
+    }
+
+    /* --- LAYOUT --- */
+    .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+    /* --- SUBJECT CARD --- */
+    .subject-card {
+      background: var(--bg-white); border-radius: 12px; padding: 20px;
+      border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;
+    }
+    .subject-title { font-size: 1.1rem; font-weight: 700; margin: 0; }
+    .subject-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; min-height: 50px; }
+
+    .stat-row { display: flex; gap: 15px; font-size: 0.8rem; font-weight: 600; padding: 10px 0; border-top: 1px solid var(--border); }
+    .stat-s { color: var(--submitted); }
+    .stat-p { color: var(--pending); }
+
+    /* --- BUTTONS --- */
+    .btn { cursor: pointer; border: none; border-radius: 6px; padding: 8px 12px; font-weight: 600; font-size: 0.75rem; transition: 0.2s; }
+    .btn-primary { background: var(--primary); color: white; align-self: flex-start; }
+    .btn-mode { background: var(--border); color: var(--text-dark); }
+    .btn-back { background: var(--border); color: var(--text-dark); margin-bottom: 20px; font-size: 0.9rem; }
+
+    /* --- ASSIGNMENT PAGE --- */
+    .assignment-item { background: var(--bg-white); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border); }
+    .remarks-box { width: 100%; margin-top: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-page); color: var(--text-dark); font-family: inherit; }
+
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div id="overviewPage">
+    <header class="navbar">
+      <div style="font-weight: bold; color: var(--primary);">🎓 Education</div>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="globalSearch" class="top-search" placeholder="Search subjects...">
+      </div>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="btn btn-mode" onclick="toggleTheme()" id="themeBtn">🌙 Mode</button>
+        <div style="width:30px; height:30px; background:var(--primary); border-radius:50%; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold;">TY</div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h1>Overview</h1>
+        <span id="counter" style="background:var(--primary); color:white; padding:2px 10px; border-radius:12px; font-size:0.8rem;">6 Subjects</span>
+      </div>
+
+      <div class="cards-grid" id="grid">
+        <article class="subject-card" data-name="Biology">
+          <h3 class="subject-title">Biology</h3>
+          <div class="subject-desc" contenteditable="true">An exploration of living organisms, from cellular structures to complex ecosystems and genetics.</div>
+          <div class="stat-row">
+            <span class="stat-s">✓ 8 Submitted</span>
+            <span class="stat-p">! 2 Pending</span>
+          </div>
+          <button class="btn btn-primary" onclick="openSubject('Biology')">View Assignments</button>
+        </article>
+
+        <article class="subject-card" data-name="Reading">
+          <h3 class="subject-title">Reading</h3>
+          <div class="subject-desc" contenteditable="true">Developing critical literacy skills through the analysis of diverse texts and comprehension.</div>
+          <div class="stat-row">
+            <span class="stat-s">✓ 12 Submitted</span>
+            <span class="stat-p">! 0 Pending</span>
+          </div>
+          <button class="btn btn-primary" onclick="openSubject('Reading')">View Assignments</button>
+        </article>
+
+        <article class="subject-card" data-name="Physical Education">
+          <h3 class="subject-title">Physical Education</h3>
+          <div class="subject-desc" contenteditable="true">Improving physical fitness, motor skills, and teamwork through structured sports activities.</div>
+          <div class="stat-row">
+            <span class="stat-s">✓ 5 Submitted</span>
+            <span class="stat-p">! 1 Pending</span>
+          </div>
+          <button class="btn btn-primary" onclick="openSubject('Physical Education')">View Assignments</button>
+        </article>
+
+        <article class="subject-card" data-name="Algebra">
+          <h3 class="subject-title">Algebra(H), 121</h3>
+          <div class="subject-desc" contenteditable="true">Advanced algebraic concepts including quadratic equations, functions, and complex problem-solving.</div>
+          <div class="stat-row">
+            <span class="stat-s">✓ 15 Submitted</span>
+            <span class="stat-p">! 4 Pending</span>
+          </div>
+          <button class="btn btn-primary" onclick="openSubject('Algebra(H), 121')">View Assignments</button>
+        </article>
+
+        <article class="subject-card" data-name="Chemistry">
+          <h3 class="subject-title">Chemistry and Biochemistry</h3>
+          <div class="subject-desc" contenteditable="true">The study of matter, chemical reactions, and the molecular basis of biological processes.</div>
+          <div class="stat-row">
+            <span class="stat-s">✓ 7 Submitted</span>
+            <span class="stat-p">! 3 Pending</span>
+          </div>
+          <button class="btn btn-primary" onclick="openSubject('Chemistry and Biochemistry')">View Assignments</button>
+        </article>
+
+        <article class="subject-card" data-name="Computer Science">
+          <h3 class="subject-title">Computer Science</h3>
+          <div class="subject-desc" contenteditable="true">Introduction to computational thinking, logic, and software development.</div>
+          <div class="stat-row">
+            <span class="stat-s">✓ 10 Submitted</span>
+            <span class="stat-p">! 1 Pending</span>
+          </div>
+          <button class="btn btn-primary" onclick="openSubject('Computer Science')">View Assignments</button>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <div id="detailsPage" hidden>
+    <main class="container">
+      <button class="btn btn-back" onclick="showOverview()">← Back to Overview</button>
+      <h1 id="detailTitle">Subject Details</h1>
+      
+      <div class="assignment-item">
+        <div style="display:flex; justify-content:space-between; font-weight:700;">
+          <span>Assignment: Unit 1 Final Report</span>
+          <span style="color:var(--pending)">Status: Pending</span>
+        </div>
+        <p style="font-size:0.85rem; margin-top:10px; color:var(--text-muted);">
+          Note: If you have already submitted this but the portal is not updated, please leave a remark below for the administrator.
+        </p>
+        <textarea class="remarks-box" placeholder="Write your remarks here... (e.g. 'Handed in hard copy on Monday')"></textarea>
+        <button class="btn btn-primary" style="margin-top:10px" onclick="alert('Remark submitted to Administrator.')">Submit Remark</button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // THEME TOGGLE
+    function toggleTheme() {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      document.getElementById('themeBtn').innerText = isDark ? '🌙 Mode' : '☀️ Mode';
+    }
+
+    // SEARCH LOGIC
+    const search = document.getElementById('globalSearch');
+    search.addEventListener('input', (e) => {
+      const val = e.target.value.toLowerCase();
+      let count = 0;
+      document.querySelectorAll('.subject-card').forEach(card => {
+        const matches = card.querySelector('.subject-title').innerText.toLowerCase().includes(val);
+        card.hidden = !matches;
+        if(matches) count++;
+      });
+      document.getElementById('counter').innerText = `${count} Subject${count !== 1 ? 's' : ''}`;
+    });
+
+    // NAVIGATION LOGIC
+    function openSubject(name) {
+      document.getElementById('overviewPage').hidden = true;
+      document.getElementById('detailsPage').hidden = false;
+      document.getElementById('detailTitle').innerText = name + " Assignments";
+      window.scrollTo(0,0);
+    }
+
+    function showOverview() {
+      document.getElementById('overviewPage').hidden = false;
+      document.getElementById('detailsPage').hidden = true;
+    }
+  </script>
+</body>
+</html>
